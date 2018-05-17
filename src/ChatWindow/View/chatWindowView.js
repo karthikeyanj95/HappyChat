@@ -1,15 +1,20 @@
 import React, { Component } from 'react';
+
 class chatWindowView extends Component {
     constructor(props) {
         super(props);
         this.state = {
             isOpen: true,
             chatEnded: false,
+            messageContent: [],
+            textSent: ''
         }
     }
+
     render() {
         return (
             <div>
+
                 <div className='ChatWindowMain'
                     style={{
                         marginLeft: 10,
@@ -22,26 +27,71 @@ class chatWindowView extends Component {
                         border: '1px solid #000'
 
                     }}>
+
                     {/* header */}
                     <div className='header'
                         style={{ flex: 1, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#02854a', color: '#fff' }}>
                         <div style={{ marginLeft: 5 }}> {this.props.name} </div>
-                        <div style={{ fontWeight: 'bold', color: '#fff', marginRight: 5 }}
 
-                            onClick={() => {
+                        <div style={{ display: 'flex', flexDirection: 'row' }}>
 
-                                this.setState({ isOpen: !this.state.isOpen })
+                            <div className='endChat' style={{ fontWeight: 'bold', color: '#fff', marginRight: 5, cursor: 'pointer' }}
+                                onClick={() => {
+                                    this.setState({ chatEnded: true })
+                                }}>
+                                _
+                        </div>
 
-                            }}>
-                            {this.state.isOpen ? 'X' : '+'}</div>
+                            <div className='minimize' style={{ fontWeight: 'bold', color: '#fff', marginLeft: 5, marginRight: 5, cursor: 'pointer' }}
+
+                                onClick={() => {
+
+                                    this.setState({ isOpen: !this.state.isOpen })
+
+                                }}>
+                                {this.state.isOpen ? 'X' : '+'}</div>
+                        </div>
                     </div>
 
                     {/* Message Area */}
-                    <div className='content' style={{ flex: 6, display: 'flex', flexDirection: 'column' }}>
+                    <div className='content' style={{ flex: 6, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
+                        {this.state.messageContent.map((item, index) => {
+                            var widthOfBar = item.text.length*10;
+                            return <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: item.type === 'self' ? 'flex-end' : 'flex-start' }}>
+                                <div style={{
+                                    height: 30,
+                                    width: widthOfBar,
+                                    borderRadius: 3,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: item.type === 'self'?'flex-end':'flex-start',
+                                    border: "1px solid e5e5e5",
+                                    backgroundColor: item.type === 'self' ? '#4EAA81' : '#E6BFA2',
+                                    margin: 5,
+                                    padding:3,
+                                    color: "#000"
+                                }}>
+                                    {item.text}
+                                </div>
+                            </div>
+                        })}
                     </div>
 
-                    {/* Send Action */}
+                    {/* chat ended message */}
+                    <div style={{
+                        height: 32,
+                        display: this.state.chatEnded ? 'flex' : 'none',
+                        flexDirection: 'row',
+                        color: '#fff',
+                        backgroundColor: 'red',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}>
+                        Your chat has been ended
+                    </div>
 
+
+                    {/* Send Action */}
                     <div className='textArea' style={{ flex: 1, display: 'flex', flexDirection: 'row' }}>
                         <div className="cannedText"
                             style={{
@@ -49,13 +99,22 @@ class chatWindowView extends Component {
                                 textAlign: 'center',
                                 color: '#000',
                                 backgroundColor: '#f0f5f9',
-                                border: '1px solid #e5e5e5'
-                            }}>
+                                cursor: 'pointer',
+                                border: '1px solid #e5e5e5',
+                                opacity: this.state.chatEnded ? 0.4 : 1
+                            }}
+                            disabled={this.chatEnded}>
                             <p style={{ fontWeight: 'bold' }}>+</p>
                         </div>
 
-                        <div className="textInput" style={{ flex: 5, display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                            <input type="text" style={{ height: '42px', width: '100%', borderColor: '#e5e5e5' }} >
+                        <div className="textInput" style={{ flex: 5, display: 'flex', flexDirection: 'row', alignItems: 'center', opacity: this.state.chatEnded ? 0.4 : 1 }}>
+                            <input type="text"
+                                value={this.state.textSent}
+                                style={{ height: '42px', width: '100%', borderColor: '#e5e5e5' }}
+                                onChange={(e) => {
+                                    this.setState({ textSent: e.target.value })
+                                }}
+                                disabled={this.chatEnded}>
                             </input>
                         </div>
 
@@ -70,11 +129,40 @@ class chatWindowView extends Component {
                                     borderColor: '#02854a',
                                     backgroundColor: '#02854a',
                                     outline: 0,
+                                    cursor: 'pointer',
                                     color: "#fff",
                                     fontWeight: 'bold',
                                     opacity: this.state.chatEnded ? 0.4 : 1
                                 }}
-                                onClick={() => { }}>
+                                onClick={() => {
+                                    this.setState({ messageContent: [] })
+                                    var msgObj = {
+                                        "text": this.state.textSent,
+                                        "type": "self"
+                                    }
+                                    this.state.messageContent.push(msgObj);
+
+                                    switch (this.state.textSent) {
+                                        case 'Hi': {
+                                            var recvObj = {
+                                                "text": "Hello",
+                                                "type": "other"
+                                            }
+                                            this.state.messageContent.push(recvObj);
+                                            break;
+                                        }
+                                        default: {
+                                            recvObj = {
+                                                "text": "Can't understand you",
+                                                "type": "other"
+                                            }
+                                            this.state.messageContent.push(recvObj);
+                                        }
+                                    }
+
+                                    this.setState({ messageContent: this.state.messageContent })
+
+                                }}>
                                 SEND
                     </button>
                         </div>
@@ -88,7 +176,6 @@ class chatWindowView extends Component {
                     marginRight: 10,
                     height: 40,
                     width: 320,
-                    display: 'flex',
                     flexDirection: 'row',
                     alignItems: 'center',
                     justifyContent: 'space-between',

@@ -14,6 +14,7 @@ class mainPage extends Component {
     renderChatWindow = () => {
         return this.state.chatWindowCount.map((item, index) => {
             return (
+
                 <ChatWindow key={index} name={item} id={index} onDelete={(chatID) => {
 
                     this.state.chatWindowCount.splice(chatID, 1);
@@ -23,6 +24,7 @@ class mainPage extends Component {
                     if (this.state.chatWindowCount < 4)
                         this.setState({ disableAddChat: false })
                 }} />
+
             )
         })
     }

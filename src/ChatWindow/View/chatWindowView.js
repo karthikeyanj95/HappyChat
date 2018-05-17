@@ -185,9 +185,27 @@ class chatWindowView extends Component {
                                             this.state.messageContent.push(recvObj);
                                             break;
                                         }
+                                        case 'hi': {
+                                            var recvObj = {
+                                                "text": "Hello",
+                                                "type": "other",
+                                                "time": currTime
+                                            }
+                                            this.state.messageContent.push(recvObj);
+                                            break;
+                                        }
+                                        case 'Hello': {
+                                            var recvObj = {
+                                                "text": "Hello",
+                                                "type": "other",
+                                                "time": currTime
+                                            }
+                                            this.state.messageContent.push(recvObj);
+                                            break;
+                                        }
                                         default: {
                                             recvObj = {
-                                                "text": "Can't understand you",
+                                                "text": "Can't understand you! Please come again!",
                                                 "type": "other",
                                                 "time": currTime
                                             }

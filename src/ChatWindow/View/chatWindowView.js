@@ -56,22 +56,33 @@ class chatWindowView extends Component {
                     {/* Message Area */}
                     <div className='content' style={{ flex: 6, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
                         {this.state.messageContent.map((item, index) => {
-                            var widthOfBar = item.text.length*10;
-                            return <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: item.type === 'self' ? 'flex-end' : 'flex-start' }}>
+                            var widthOfBar = item.text.length * 10;
+                            return <div key={index} style={{ display: 'flex', height: 60, flexDirection: 'column', alignItems: item.type === 'self' ? 'flex-end' : 'flex-start', justifyContent: item.type === 'self' ? 'flex-end' : 'flex-start' }}>
+
                                 <div style={{
                                     height: 30,
                                     width: widthOfBar,
                                     borderRadius: 3,
                                     display: 'flex',
                                     alignItems: 'center',
-                                    justifyContent: item.type === 'self'?'flex-end':'flex-start',
+                                    justifyContent: item.type === 'self' ? 'flex-end' : 'flex-start',
                                     border: "1px solid e5e5e5",
                                     backgroundColor: item.type === 'self' ? '#4EAA81' : '#E6BFA2',
                                     margin: 5,
-                                    padding:3,
+                                    padding: 3,
                                     color: "#000"
                                 }}>
                                     {item.text}
+                                </div>
+                                <div style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: item.type === 'self' ? 'flex-end' : 'flex-start',
+                                    padding: 3,
+                                    fontSize: 8,
+                                    color: "#000"
+                                }}>
+                                    {item.time}
                                 </div>
                             </div>
                         })}
@@ -135,10 +146,19 @@ class chatWindowView extends Component {
                                     opacity: this.state.chatEnded ? 0.4 : 1
                                 }}
                                 onClick={() => {
+
+                                    var d = new Date();
+                                    var currTime = d.getHours() % 12 + ':' + d.getMinutes();
+                                    console.log('Current TIme:::', currTime)
+                                    if (this.state.textSent === '')
+                                        return;
+
                                     this.setState({ messageContent: [] })
                                     var msgObj = {
                                         "text": this.state.textSent,
-                                        "type": "self"
+                                        "type": "self",
+                                        "time": currTime
+
                                     }
                                     this.state.messageContent.push(msgObj);
 
@@ -146,7 +166,8 @@ class chatWindowView extends Component {
                                         case 'Hi': {
                                             var recvObj = {
                                                 "text": "Hello",
-                                                "type": "other"
+                                                "type": "other",
+                                                "time": currTime
                                             }
                                             this.state.messageContent.push(recvObj);
                                             break;
@@ -154,13 +175,14 @@ class chatWindowView extends Component {
                                         default: {
                                             recvObj = {
                                                 "text": "Can't understand you",
-                                                "type": "other"
+                                                "type": "other",
+                                                "time": currTime
                                             }
                                             this.state.messageContent.push(recvObj);
                                         }
                                     }
 
-                                    this.setState({ messageContent: this.state.messageContent })
+                                    this.setState({ messageContent: this.state.messageContent, textSent: '' })
 
                                 }}>
                                 SEND

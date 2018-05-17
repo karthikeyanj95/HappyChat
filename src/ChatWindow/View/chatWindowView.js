@@ -24,13 +24,21 @@ class chatWindowView extends Component {
                         borderRadius: 3,
                         display: this.state.isOpen ? 'flex' : 'none',
                         flexDirection: 'column',
-                        border: '1px solid #000'
+                        boxShadow: '-1px 2px 4px #888888'
 
                     }}>
 
                     {/* header */}
                     <div className='header'
-                        style={{ flex: 1, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#02854a', color: '#fff' }}>
+                        style={{
+                            flex: 1, display: 'flex',
+                            flexDirection: 'row',
+                            borderBottom: '6px solid #196451',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            backgroundColor: '#02854a',
+                            color: '#fff'
+                        }}>
                         <div style={{ marginLeft: 5 }}> {this.props.name} </div>
 
                         <div style={{ display: 'flex', flexDirection: 'row' }}>
@@ -45,7 +53,10 @@ class chatWindowView extends Component {
                             <div className='minimize' style={{ fontWeight: 'bold', color: '#fff', marginLeft: 5, marginRight: 5, cursor: 'pointer' }}
 
                                 onClick={() => {
-
+                                    if (this.state.chatEnded) {
+                                        this.props.onDelete(this.props.id);
+                                        return;
+                                    }
                                     this.setState({ isOpen: !this.state.isOpen })
 
                                 }}>
@@ -70,6 +81,7 @@ class chatWindowView extends Component {
                                     backgroundColor: item.type === 'self' ? '#4EAA81' : '#E6BFA2',
                                     margin: 5,
                                     padding: 3,
+                                    boxShadow: item.type === 'self' ? '-5px 2px 4px #888888' : '5px 2px 4px #888888',
                                     color: "#000"
                                 }}>
                                     {item.text}
@@ -121,7 +133,7 @@ class chatWindowView extends Component {
                         <div className="textInput" style={{ flex: 5, display: 'flex', flexDirection: 'row', alignItems: 'center', opacity: this.state.chatEnded ? 0.4 : 1 }}>
                             <input type="text"
                                 value={this.state.textSent}
-                                style={{ height: '42px', width: '100%', borderColor: '#e5e5e5' }}
+                                style={{ height: '42px', width: '100%', borderColor: '#e5e5e5', borderRadius: 10, outline: 0 }}
                                 onChange={(e) => {
                                     this.setState({ textSent: e.target.value })
                                 }}
@@ -149,7 +161,7 @@ class chatWindowView extends Component {
 
                                     var d = new Date();
                                     var currTime = d.getHours() % 12 + ':' + d.getMinutes();
-                                    console.log('Current TIme:::', currTime)
+
                                     if (this.state.textSent === '')
                                         return;
 

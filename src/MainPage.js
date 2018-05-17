@@ -14,7 +14,12 @@ class mainPage extends Component {
     renderChatWindow = () => {
         return this.state.chatWindowCount.map((item, index) => {
             return (
-                <ChatWindow key={index} name={item} />
+                <ChatWindow key={index} name={item} id={index} onDelete={(chatID) => {
+                    console.log("CHAT ID::::", chatID)
+                    this.state.chatWindowCount.splice(chatID, 1);
+                    console.log("DELETED", this.state.chatWindowCount)
+                    this.setState({ chatWindowCount: this.state.chatWindowCount })
+                }} />
             )
         })
     }

@@ -39,9 +39,10 @@ class chatWindowView extends Component {
                             backgroundColor: '#02854a',
                             color: '#fff'
                         }}>
+
                         <div style={{ marginLeft: 5 }}> {this.props.name} </div>
 
-                        <div style={{ display: 'flex', flexDirection: 'row' }}>
+                        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline', flex: 0.3, justifyContent: 'space-evenly' }}>
 
                             <div className='endChat' style={{ fontWeight: 'bold', color: '#fff', marginRight: 5, cursor: 'pointer' }}
                                 onClick={() => {
